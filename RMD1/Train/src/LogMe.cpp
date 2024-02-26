@@ -13,6 +13,10 @@ namespace LogMe {
         }
     }
 
+    void    Logger::set_debug_level(logging_level lvl) {
+        _lvl = lvl;
+    }
+
     void    Logger::debug(const std::string& msg) {
         this->log(logging_level::Debug, msg);
     }
