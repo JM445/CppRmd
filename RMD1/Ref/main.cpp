@@ -14,14 +14,14 @@ int main() {
     }
 
     // Part 3
-   {
-   LogMe::StreamLogger mylogger("stream.log");
+   // {
+   // LogMe::StreamLogger mylogger("stream.log");
 
-   mylogger << LogMe::Warn
-            << "Ceci est un message de warning.\n";
-   mylogger << LogMe::Debug
-            << "Ceci est un message de debug.\n"
-            << LogMe::Critical
-            << "Mais ceci est critique.\n";
-   }
+   // mylogger << LogMe::Warn
+   //          << "Ceci est un message de warning.\n";
+   // mylogger << LogMe::Debug
+   //          << "Ceci est un message de debug.\n"
+   //          << LogMe::Critical
+   //          << "Mais ceci est critique.\n";
+   // }
 }
