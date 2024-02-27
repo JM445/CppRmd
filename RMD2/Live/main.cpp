@@ -3,18 +3,17 @@
 using namespace LogMe;
 
 int main(int argc, char *argv[]) {
-    set_debug_level(LogMe::Critical);
+    auto root = std::make_shared<CriticalLogger>("critical.log");
+    root->chain(std::make_shared<ErrorLogger>("log.log"));
+    root->chain(std::make_shared<FileLogger>("log.log", LogMe::Warning));
+    root->chain(std::make_shared<CerrLogger>(LogMe::Debug));
+    root->chain(root);
 
-    Logger log1 = LogMe::Logger{};
-//    Logger log2 = LogMe::Logger{LogMe::logging_level::Error, "logfile.log"};
+    root->log(LogMe::Critical, "This is a critical error");
+    root->log(LogMe::Error, "This is an error");
+    root->log(LogMe::Warning, "This is a warning");
+    root->log(LogMe::Info, "This is an info");
 
-//    warn("This is logged by the default logger");
 
-    log1.info("Hello World !");
-    log1.debug("This won't be logged");
-    log1.error("But this will");
-
-//    log2.critical("This will also be logged to a file");
-//    log2.info("This won't");
     return 0;
 }

@@ -2,6 +2,7 @@
 #define LOGME_H_
 #include <string>
 #include <fstream>
+#include <memory>
 
 namespace LogMe {
     enum logging_level {
@@ -12,35 +13,57 @@ namespace LogMe {
         Debug    = 50
     };
 
-    class Logger {
-        logging_level _lvl  = logging_level::Info;
-        std::ofstream _file;
+    class LoggerBase {
+        const logging_level _lvl  = logging_level::Info;
 
-        void log(logging_level level, const std::string& msg); // Privée
-
-    public:
-        void set_debug_level(logging_level level);
-        void debug(const std::string& msg);
-        void info(const std::string& msg);
-        void warn(const std::string& msg);
-        void critical(const std::string& msg);
-        void error(const std::string& msg);
+    protected:
+        std::shared_ptr<LoggerBase> _next;
 
     public:
-        Logger() = default;
-        Logger(logging_level lvl, const char* filename = nullptr) : _lvl(lvl), _file(filename) {}
+        virtual void log(logging_level level, const std::string& msg) = 0;
+        void chain(std::shared_ptr<LoggerBase> logger);
+        logging_level get_level() const;
 
+    public:
+        LoggerBase(logging_level lvl);
+        LoggerBase();
     };
 
-    void set_debug_level(logging_level level);
-    void debug(const std::string& msg);
-    void info(const std::string& msg);
-    void warn(const std::string& msg);
-    void critical(const std::string& msg);
-    void error(const std::string& msg);
+    class FileLogger : public LoggerBase {
+        std::ofstream _stream;
+
+    public:
+        virtual void log(logging_level level, const std::string& msg);
+
+    public:
+        FileLogger(const std::string& file, logging_level lvl = Info);
+    };
+
+    class ErrorLogger : public FileLogger {
+    public:
+        virtual void log(logging_level lvl, const std::string& msg) override;
+
+    public:
+        ErrorLogger(const std::string& file);
+    };
+
+    class CerrLogger : public LoggerBase {
+    public:
+        virtual void log(logging_level lvl, const std::string& msg) override;
+
+    public:
+        CerrLogger(logging_level lvl);
+    };
+
+    class CriticalLogger : public FileLogger {
+    public:
+        virtual void log(logging_level lvl, const std::string& msg) override;
+
+    public:
+        CriticalLogger(const std::string& file);
+    };
 
 
-    // Day 2
 }
 
 #endif // LOGME_H_
