@@ -1,0 +1,2 @@
+/etc/profiles/per-user/jm445/bin/ar qc libLogMe.a CMakeFiles/LogMe.dir/src/LogMe.cpp.o
+/etc/profiles/per-user/jm445/bin/ranlib libLogMe.a
